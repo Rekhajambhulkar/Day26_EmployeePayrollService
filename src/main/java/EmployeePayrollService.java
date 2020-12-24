@@ -10,12 +10,16 @@ public class EmployeePayrollService {
     public enum IOService {CONSOLE_IO, FILE_IO, DB_IO, REST_IO}
 
     private List<EmployeePayrollData> employeepayrollList;
+    private EmployeePayrollDBService employeePayrollDBService;
+
 
     public EmployeePayrollService() {
+        employeePayrollDBService = EmployeePayrollDBService.getInstance();
     }
 
     public EmployeePayrollService(List<EmployeePayrollData> employeepayrollList) {
-        this.employeepayrollList = employeepayrollList;
+    	this();
+	this.employeepayrollList = employeepayrollList;
     }
 
     private void readEmployeePayrollData(Scanner consoleInputReader) {
@@ -33,6 +37,25 @@ public class EmployeePayrollService {
             this.employeepayrollList = new EmployeePayrollDBService().readData();
         return employeepayrollList;
 
+    }
+
+public boolean checkEmployeePayrollInSyncWithDB(String name) {
+        List<EmployeePayrollData> employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
+        return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
+    }
+
+    public void updateEmployeeSalary(String name, double salary) {
+        int result = employeePayrollDBService.updateEmployeeData(name, salary);
+        if(result == 0) return;
+        EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
+        if(employeePayrollData != null) employeePayrollData.salary = salary;
+    }
+
+    private EmployeePayrollData getEmployeePayrollData(String name) {
+        return this.employeepayrollList.stream()
+                .filter(employeePayrollDataItem -> employeePayrollDataItem.name.equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     public void writeEmployeePayrollData(IOService ioService) {
