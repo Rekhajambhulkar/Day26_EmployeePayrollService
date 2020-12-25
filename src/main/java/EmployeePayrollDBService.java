@@ -7,7 +7,7 @@ import java.util.List;
 
 public class EmployeePayrollDBService {
 
-private PreparedStatement employeePayrollDataStatement;
+    private PreparedStatement employeePayrollDataStatement;
     private static EmployeePayrollDBService employeePayrollDBService;
     private EmployeePayrollDBService() {
     }
@@ -48,7 +48,7 @@ private PreparedStatement employeePayrollDataStatement;
         return employeePayrollList;
     }
 
- public List<EmployeePayrollData> getEmployeePayrollData(String name) {
+    public List<EmployeePayrollData> getEmployeePayrollData(String name) {
         List<EmployeePayrollData> employeePayrollList = null;
         if(this.employeePayrollDataStatement == null)
             this.prepareStatementForEmployeeData();
