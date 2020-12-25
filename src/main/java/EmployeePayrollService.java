@@ -20,6 +20,7 @@ public class EmployeePayrollService {
     public EmployeePayrollService(List<EmployeePayrollData> employeepayrollList) {
     	this();
 	this.employeepayrollList = employeepayrollList;
+        this.employeePayrollList = new ArrayList<>(employeePayrollList);
     }
 
     private void readEmployeePayrollData(Scanner consoleInputReader) {
