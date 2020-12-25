@@ -70,12 +70,41 @@ public class EmployeePayrollService {
                 .orElse(null);
     }
 
-    public void writeEmployeePayrollData(IOService ioService) {
-        if (ioService.equals(IOService.CONSOLE_IO))
-            System.out.println("\n Writting Employee payroll to Console\n" + employeepayrollList);
-        else if (ioService.equals(IOService.FILE_IO))
-            new EmployeePayrollFileIOService().writeData(employeepayrollList);
+    public void addEmployeeToPayroll(List<EmployeePayrollData> employeepayrollList) {
+        employeepayrollList.forEach(employeePayrollData -> {
+            this.addEmployeeToPayroll(employeePayrollData.name, employeePayrollData.salary,
+                    employeePayrollData.startDate, employeePayrollData.gender);
+        });
     }
+
+    public void addEmployeePayrollWithThread(List<EmployeePayrollData> employeePayrollDataList) {
+		Map<Integer, Boolean> employeeAdditionStatus = new HashMap<Integer, Boolean>();
+		employeePayrollDataList.forEach(employeePayrollData -> {
+			Runnable task = () -> {
+				employeeAdditionStatus.put(employeePayrollData.hashCode(), false);
+				System.out.println("Employee being added: "+ Thread.currentThread().getName());
+				this.addEmployeeToPayroll(employeePayrollData.name, employeePayrollData.salary,
+						employeePayrollData.startDate, employeePayrollData.gender);
+				employeeAdditionStatus.put(employeePayrollData.hashCode(), true);
+				System.out.println("Employee Added: " + Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task, employeePayrollData.name);
+			thread.start();
+
+		});
+		while (employeeAdditionStatus.containsValue(false)) {
+			try {Thread.sleep(10);
+			}catch (InterruptedException e) {}
+		}
+		System.out.println(employeepayrollList);
+	}
+
+	public void writeEmployeePayrollData(IOService ioService) {
+        	if (ioService.equals(IOService.CONSOLE_IO))
+            	System.out.println("\n Writting Employee payroll to Console\n" + employeepayrollList);
+        	else if (ioService.equals(IOService.FILE_IO))
+            	new EmployeePayrollFileIOService().writeData(employeepayrollList);
+        }
 
     public void printData(IOService ioService) {
         if (ioService.equals(IOService.FILE_IO))

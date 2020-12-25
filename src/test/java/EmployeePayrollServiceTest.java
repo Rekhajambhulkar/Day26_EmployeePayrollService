@@ -68,4 +68,28 @@ public class EmployeePayrollServiceTest {
 	boolean result = employeepayrollService.checkEmployeePayrollInSyncWithDB("MAHI");
 	Assert.assertTrue(result);
     }
+
+    @Test
+    //UC9
+    public void givenEmployees_WhenAddedToDB_ShouldMatchEmployeeEntries() {
+	EmployeePayrollData[] arrayOfEmps = {
+			new EmployeePayrollData(0, "shweta", "F", 10000.0, LocalDate.now()),
+			new EmployeePayrollData(0, "Neha", "F", 20000.0, LocalDate.now()),
+			new EmployeePayrollData(0, "Riyansh", "M", 40000, LocalDate.now()),
+			new EmployeePayrollData(0, "Sahil", "M", 35000.0, LocalDate.now()),
+			new EmployeePayrollData(0, "Nupoor", "F", 60000.0, LocalDate.now()),
+    };
+		EmployeePayrollService employeepayrollService = new EmployeePayrollService();
+		employeepayrollService.readEmployeePayrollData(DB_IO);
+		Instant start = Instant.now();
+		employeepayrollService.addEmployeeToPayroll(Arrays.asList(arrayOfEmps));
+		Instant end = Instant.now();
+		System.out.println("Duration without thread:" + Duration.between(start, end));
+		Instant threadStart = Instant.now();
+		employeepayrollService.addEmployeePayrollWithThread(Arrays.asList(arrayOfEmps));
+		Instant threadEnd = Instant.now();
+		System.out.println("Duration with thread" + Duration.between(threadStart, threadEnd));
+		employeepayrollService.printData(DB_IO);
+		Assert.assertEquals(12, employeepayrollService.countEntries(DB_IO));
+	}
 }
