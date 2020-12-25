@@ -49,4 +49,13 @@ public class EmployeePayrollServiceTest {
         Assert.assertEquals(3, employeePayrollData.size());
     }
 
+    @Test
+    public void givenPayrollDataWhenAverageSalaryRetrievedByGenderShouldReturnProperValue() {
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+        Map<String, Double> averageSalaryByGender = employeePayrollService
+                .readAverageSalaryByGender(EmployeePayrollService.IOService.DB_IO);
+        Assert.assertTrue(averageSalaryByGender.get("M").equals(2000000.00) &&
+                averageSalaryByGender.get("F").equals(3000000.00));
+    }
 }

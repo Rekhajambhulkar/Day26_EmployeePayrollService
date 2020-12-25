@@ -45,6 +45,11 @@ public class EmployeePayrollService {
         return null;
     }
 
+    public Map<String, Double> readAverageSalaryByGender(IOService ioService) {
+        if (ioService.equals(IOService.DB_IO))
+            return employeePayrollDBService.getAverageSalaryByGender();
+        return null;
+    }
 
     public boolean checkEmployeePayrollInSyncWithDB(String name) {
         List<EmployeePayrollData> employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
