@@ -100,6 +100,12 @@ public class EmployeePayrollService {
 		System.out.println(employeepayrollList);
 	}
 
+	public void addEmployeeToPayroll(EmployeePayrollData employeePayrollData, IOService ioService) {
+		if (ioService.equals(IOService.DB_IO))
+			this.addEmployeeToPayroll(employeePayrollData.name, employeePayrollData.salary, employeePayrollData.startDate, employeePayrollData.gender );
+		else employeepayrollList.add(employeePayrollData);
+	}
+
 	public void writeEmployeePayrollData(IOService ioService) {
         	if (ioService.equals(IOService.CONSOLE_IO))
             	System.out.println("\n Writting Employee payroll to Console\n" + employeepayrollList);
@@ -107,14 +113,14 @@ public class EmployeePayrollService {
             	new EmployeePayrollFileIOService().writeData(employeepayrollList);
         }
 
-    public void printData(IOService ioService) {
+        public void printData(IOService ioService) {
         if (ioService.equals(IOService.FILE_IO))
             new EmployeePayrollFileIOService().printData();
-    }
+        }
 
-    public long countEntries(IOService ioService) {
-        if (ioService.equals(IOService.FILE_IO))
-            return new EmployeePayrollFileIOService().countEntries();
-        return 0;
-    }
+        public long countEntries(IOService ioService) {
+        	if (ioService.equals(IOService.FILE_IO))
+            	return new EmployeePayrollFileIOService().countEntries();
+        	return 0;
+    	}
 }
